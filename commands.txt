@@ -1,0 +1,29 @@
+./yowsup-cli registration --requestcode sms --phone 584142534221 --cc 58 --mcc 734 --mnc 04 -E android
+
+./yowsup-cli registration --register 764117 --phone 584142534221 --cc 58 -E android
+
+
+user 584241284028
+pass NzTpLXj0b516w8Eqm5zh+FP5PC8=
+
+
+
+Coin api result:
+
+{
+      'id':'bitcoin',
+      'name':'Bitcoin',
+      'symbol':'BTC',
+      'rank':'1',
+      'price_usd':'6104.54',
+      'price_btc':'1.0',
+      '24h_volume_usd':'1966100000.0',
+      'market_cap_usd':'101670350632',
+      'available_supply':'16654875.0',
+      'total_supply':'16654875.0',
+      'percent_change_1h':'0.14',
+      'percent_change_24h':'-0.77',
+      'percent_change_7d':'4.35',
+      'last_updated':'1509396854',
+      'cached':False
+}
