@@ -6,6 +6,7 @@ from service.getcryptocoin import GetCryptoCoin
 from controller.buyaction import BuyAction
 from service.getgameround import GetGameRound
 from controller.joingameaction import JoinGameAction
+from service.getinfotexts import GetInfoTexts
 from service.getportfolio import GetPortfolio
 from service.getperson import GetPerson
 from controller.sellaction import SellAction
@@ -27,46 +28,13 @@ class WhatsappBot:
         return "Sorry, I'm not sure what you mean by '"+arg+"'. Type help for a list of commands."
 
     def do_help(self, arg, phone=""):
-
-        help_str = "\nWelcome to the *Crypto Fantasy Trading Bot*!\n\n"\
-                   "The commands available: \n\n" \
-                   "- *help* -> shows this help section \n" \
-                   "- *tutorial* -> explains the game\n" \
-                   "- *tick <symbol>* or *ticker <symbol>* -> shows the crypto price, if no symbol " \
-                   "then shows top 10. example: tick btc \n" \
-                   "- *top <number>* -> shows a list of the top crypto currencies. example: top 10\n" \
-                   "- *buy <amount_usd> <symbol>* -> to buy a crypto currency. example: buy 1000 btc\n" \
-                   "- *sell <amount_coin> <symbol>* -> to sell a crypto currency. example: sell 0.15 btc\n" \
-                   "- *leaderboard* -> shows the top players\n" \
-                   "- *join* or *play* -> to join the current game round\n" \
-                   "- *portfolio* -> shows your portfolio\n" \
-                   "- *register <name>* -> will register to be able to play\n\n"
-
-        return help_str
+        return GetInfoTexts().get_help()
 
     def do_tutorial(self, arg, phone=""):
-
-        tutorial_str = "Each player competes against all the others to try to create the best portfolio and make the most money.  " \
-                       "The game starts at 8a.m. each day, and each player gets $10,000 of play money to work with.\n\n" \
-                       "" \
-                       "Over the course of the day, players buy and sell cryptocurrencies.  " \
-                       "You can buy all the cryptocurrencies supported by the major exchanges. " \
-                       "You make money when your picks go up and you lose money when they go down.\n " \
-                       "So buy low and sell high!  After 24 hours, the game ends.\n\n"
-
-        tutorial_str += "Here's what I suggest to you. \n\n Play a round right now!  First, type register <name> to be part of the system. " \
-                        "Then, type join to enter the current round. After type portfolio to see your holdings. \n\n" \
-                        "If you just started, it should be $10,000, all in USD.  Next, type buy 2000 BTC to get yourself a bitcoin position. " \
-                        "Then type portfolio again to verify that you're now the proud owner of $2,000 worth of pretend BTC.\n" \
-                        "Type sell .01 BTC to partially exit your BTC position, then check your holdings again with portfolio.  "
-
-        return tutorial_str
+        return GetInfoTexts().get_tutorial()
 
     def do_info(self, arg, phone=""):
-        try:
-            return self.get_crypto_api.get_coin(symbol=arg)
-        except Exception as e:
-            return str(e)
+        return self.get_crypto_api.get_coin(symbol=arg)
 
     def do_tick(self, arg, phone=""):
         return self.do_ticker(arg)
@@ -94,17 +62,12 @@ class WhatsappBot:
             return portfolio_string
         except PlayerIsNotPartOfGameRoundError as e:
             return e.msg
-        except Exception as e:
-            return "Something went wrong..."+str(e)
 
     def do_leaderboard(self, arg, phone=""):
         try:
             return GetLeaderBoard().to_string()
         except NoPlayersInCurrentGameRoundError as e:
             return e.msg
-        except Exception as e:
-            print(traceback.format_exc())
-            return "Something went wrong..."+str(e)
 
     def do_join(self, arg, phone=""):
         return self.do_play(arg, phone)
@@ -115,9 +78,6 @@ class WhatsappBot:
             return "Joined current round"
         except PlayerIsAlreadyInGameRoundError as e:
             return e.msg
-        except Exception as e:
-            print(traceback.format_exc())
-            return "Something went wrong..."+str(e)
 
     def do_buy(self, arg, phone=""):
         args = arg.split()
@@ -133,9 +93,6 @@ class WhatsappBot:
             return e.msg
         except NoCrytoCurrencyFoundError as e:
             return "Symbol: " + arg + ". " + e.msg
-        except Exception as e:
-            print(traceback.format_exc())
-            return "Something went wrong..."+str(e)
 
     def do_sell(self, arg, phone):
         args = arg.split()
@@ -150,9 +107,6 @@ class WhatsappBot:
         except IndexError:
             return "Wrong input. Please write amount in Coins and the crypto symbol. " \
                    "Example: sell 0.15 btc or sell 1500$ btc"
-        except Exception as e:
-            print(traceback.format_exc())
-            return "Something went wrong..." + str(e)
 
     def do_register(self, arg, phone=""):
         try:
@@ -160,8 +114,6 @@ class WhatsappBot:
             return register_action.persist()
         except YouAreAlreadyRegisteredError as e:
             return e.msg
-        except Exception as e:
-            return str(e)
 
     def do_transactions(self, arg, phone=""):
         try:
@@ -174,8 +126,6 @@ class WhatsappBot:
             return e.msg
         except PlayerIsNotPartOfGameRoundError as e:
             return e.msg
-        except Exception as e:
-            return "Something went wrong..." + str(e)
 
     def do_hello(self, arg, phone=""):
 
@@ -231,7 +181,12 @@ class MethodCallInterface:
             return False
 
         bot_action = self.methods.get(command.lower())
-        return bot_action(args, sender)
+
+        try:
+            return bot_action(args, sender)
+        except Exception as e:
+            print(traceback.format_exc())
+            return "Something went wrong..." + str(e)
 
     @staticmethod
     def get_command(message):
