@@ -155,6 +155,7 @@ class MethodCallInterface:
             'help': wb.do_help,
             'info': wb.do_info,
             'tick': wb.do_tick,
+            '$': wb.do_tick,
             'ticker': wb.do_tick,
             'precio': wb.do_tick,
             'top': wb.do_top,
@@ -191,7 +192,11 @@ class MethodCallInterface:
     @staticmethod
     def get_command(message):
         parts = message.split()
-        return re.sub('[^A-Za-z0-9]+', '', parts[0])
+
+        if parts[0].startswith('$'):
+            return '$'
+
+        return re.sub('[^A-Za-z0-9$]+', '', parts[0])
 
     @staticmethod
     def get_args(command, fullstring):
