@@ -4,8 +4,7 @@ from yowsup.layers.protocol_chatstate.protocolentities import OutgoingChatstateP
 from yowsup.layers.protocol_messages.protocolentities import TextMessageProtocolEntity
 from yowsup.layers.protocol_presence.protocolentities import UnavailablePresenceProtocolEntity
 from yowsup.layers.protocol_presence.protocolentities import AvailablePresenceProtocolEntity
-
-from controller.whatsappbot import call_func
+from controller.whatsappbot import MethodCallInterface
 import threading
 from random import randint
 import datetime
@@ -20,12 +19,13 @@ class EchoLayer(YowInterfaceLayer):
         super(EchoLayer, self).__init__()
         self.ackQueue = []
         self.lock = threading.Condition()
+        self.mcall = MethodCallInterface()
 
     @ProtocolEntityCallback("message")
     def onMessage(self, messageProtocolEntity):
 
         self.toLower(messageProtocolEntity.ack())
-        time.sleep(randint(1, 4))
+        time.sleep(randint(5, 10))
         self.toLower(AvailablePresenceProtocolEntity())
         self.toLower(messageProtocolEntity.ack(True))
 
@@ -49,18 +49,23 @@ class EchoLayer(YowInterfaceLayer):
         #if messageProtocolEntity.getFrom(False) == "584142534221":
 
         message = messageProtocolEntity.getBody()
-        message_to_send = call_func(message, messageProtocolEntity.getFrom(False), messageProtocolEntity.participant)
+        message_to_send = self.mcall.resolve(
+            message,
+            messageProtocolEntity.getFrom(False),
+            messageProtocolEntity.participant
+        )
 
         if message_to_send:
             self.toLower(OutgoingChatstateProtocolEntity(OutgoingChatstateProtocolEntity.STATE_TYPING, Jid.normalize(
                 messageProtocolEntity.getFrom(False))))  # Set is writing
-            time.sleep(randint(2, 6))
+            time.sleep(randint(4, 8))
             self.toLower(OutgoingChatstateProtocolEntity(OutgoingChatstateProtocolEntity.STATE_PAUSED, Jid.normalize(
                 messageProtocolEntity.getFrom(False))))  # Set no is writing
-            time.sleep(randint(1, 5))
+            time.sleep(randint(4, 8))
 
             self.toLower(TextMessageProtocolEntity(message_to_send, to=messageProtocolEntity.getFrom()))
 
+        time.sleep(randint(4, 8))
         self.toLower(UnavailablePresenceProtocolEntity())
 
     def onMediaMessage(self, messageProtocolEntity):

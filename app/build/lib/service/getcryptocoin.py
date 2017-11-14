@@ -36,7 +36,7 @@ class GetCryptoCoin:
         price = None
 
         for coin in self.api.ticker(limit=RESULT_LIMIT):
-            if coin['symbol'] == symbol or coin['name'] == symbol:
+            if coin['symbol'] == symbol:
                 if numeric:
                     price = float(coin['price_usd']) * float(amount)
                 else:
@@ -56,7 +56,7 @@ class GetCryptoCoin:
         coin_price = 1
 
         for coin in self.api.ticker(limit=RESULT_LIMIT):
-            if coin['symbol'] == symbol or coin['name'] == symbol:
+            if coin['symbol'] == symbol:
                 coin_price = coin['price_usd']
                 break
 

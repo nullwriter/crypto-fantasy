@@ -1,6 +1,5 @@
 import traceback
-import random
-import re
+
 from controller.registeraction import RegisterAction
 from service.getcryptocoin import GetCryptoCoin
 from controller.buyaction import BuyAction
@@ -131,8 +130,6 @@ class WhatsappBot:
             return "Wrong input. Please write amount in USD and the crypto symbol. Example: buy 1000 btc"
         except NotEnoughMoneyError as e:
             return e.msg
-        except NoCrytoCurrencyFoundError as e:
-            return "Symbol: " + arg + ". " + e.msg
         except Exception as e:
             print(traceback.format_exc())
             return "Something went wrong..."+str(e)
@@ -177,77 +174,57 @@ class WhatsappBot:
         except Exception as e:
             return "Something went wrong..." + str(e)
 
-    def do_hello(self, arg, phone=""):
-
-        scripts = [
-            "Hey, I'm back :)",
-            "Hello hooman, whats up?",
-            "Waddup dawg?",
-            "Yo, we be here all day everyday",
-            "Sup?",
-            "I missed you guy(s).",
-            "Hit me up, I'm ready"
-        ]
-
-        return random.choice(scripts)
 
     def do_say(self, arg, phone=""):
         return arg
 
 
-class MethodCallInterface:
+def call_func(name, from_number, participant):
 
-    def __init__(self):
-        wb = WhatsappBot()
+    wb = WhatsappBot()
 
-        self.methods = {
-            'default': wb.default,
-            'help': wb.do_help,
-            'info': wb.do_info,
-            'tick': wb.do_tick,
-            'ticker': wb.do_tick,
-            'precio': wb.do_tick,
-            'top': wb.do_top,
-            'buy': wb.do_buy,
-            'sell': wb.do_sell,
-            'leaderboard': wb.do_leaderboard,
-            'portfolio': wb.do_portfolio,
-            'join': wb.do_join,
-            'play': wb.do_play,
-            'say': wb.do_say,
-            'register': wb.do_register,
-            'tutorial': wb.do_tutorial,
-            'transactions': wb.do_transactions,
-            'botty': wb.do_hello,
-            'hi': wb.do_hello
-        }
+    if participant is not None and "@" in participant:
+        parts_sender = participant.split("@")
+        sender = parts_sender[0]
+    else:
+        sender = from_number
 
-    def resolve(self, message, from_number, participant):
-        sender = self.get_recepient(participant, from_number)
-        command = self.get_command(message)
-        args = self.get_args(command, message)
+    methods = {
+        'default': wb.default,
+        'help': wb.do_help,
+        'info': wb.do_info,
+        'tick': wb.do_tick,
+        'ticker': wb.do_tick,
+        'precio': wb.do_tick,
+        'top': wb.do_top,
+        'buy': wb.do_buy,
+        'sell': wb.do_sell,
+        'leaderboard': wb.do_leaderboard,
+        'portfolio': wb.do_portfolio,
+        'join': wb.do_join,
+        'play': wb.do_play,
+        'say': wb.do_say,
+        'register': wb.do_register,
+        'tutorial': wb.do_tutorial,
+        'transactions': wb.do_transactions
+    }
 
-        if command.lower() not in self.methods:
-            return False
+    method_name = strip_args(name)
+    args = get_args(method_name, name)
 
-        bot_action = self.methods.get(command.lower())
-        return bot_action(args, sender)
+    if method_name.lower() not in methods:
+        return False
 
-    @staticmethod
-    def get_command(message):
-        parts = message.split()
-        return re.sub('[^A-Za-z0-9]+', '', parts[0])
+    method = methods.get(method_name.lower())
 
-    @staticmethod
-    def get_args(command, fullstring):
-        return fullstring.replace(command, '').strip()
+    message_return = method(args, sender)
+    return message_return
 
-    @staticmethod
-    def get_recepient(participant, from_number):
-        if participant is not None and "@" in participant:
-            parts_sender = participant.split("@")
-            sender = parts_sender[0]
-        else:
-            sender = from_number
 
-        return sender
+def strip_args(command):
+    parts = command.split()
+    return parts[0]
+
+
+def get_args(command, fullstring):
+    return fullstring.replace(command, '').strip()

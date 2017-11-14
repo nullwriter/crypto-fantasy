@@ -1,3 +1,5 @@
+import traceback
+
 from yowsup.stacks import YowStackBuilder
 from yowsup.layers.auth import AuthError
 from yowsup.layers import YowLayerEvent
@@ -8,7 +10,7 @@ from yowsup.layers.axolotl.props import PROP_IDENTITY_AUTOTRUST
 import time
 import datetime
 
-CREDENTIALS = ("584241284028", "NzTpLXj0b516w8Eqm5zh+FP5PC8=")
+CREDENTIALS = ("584242718060", "W/faTNMvMFCboAGSr2/xsQEPSfg=")
 
 
 class YowsupEchoStack(object):
@@ -28,7 +30,7 @@ class YowsupEchoStack(object):
         try:
             self.stack.loop()
         except AuthError as e:
-            print("Authentication Error: %s" % e.message)
+            print("Authentication Error: %s" % e)
 
 if __name__ == '__main__':
     db().initialize()
@@ -41,8 +43,13 @@ if __name__ == '__main__':
         print(">>>>>> Loop start")
         try:
             YowsupEchoStack(CREDENTIALS).start()
+        except AttributeError as e:
+            print("Attr error: "+str(e))
+            print(traceback.format_exc())
         except Exception as e:
+            print(traceback.format_exc())
             print("Exception occurred at core level..."+str(e))
 
+        print(traceback.format_exc())
         print("Will try to reboot in 10s")
         time.sleep(10)

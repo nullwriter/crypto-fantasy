@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Boolean
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, backref
 from datetime import datetime, timedelta
 
 
@@ -73,13 +74,4 @@ class BoughtCryptoStock(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
-class Leaderboard(Base):
-    __tablename__ = "leaderboard"
-
-    id = Column(Integer, primary_key=True)
-    person_name = Column(String(250), nullable=False)
-    portfolio_id = Column(Integer, ForeignKey('portfolio.id'))
-    game_round_id = Column(Integer, ForeignKey('game_round.id'))
-    fiat_amount = Column(Float(2, asdecimal=True, decimal_return_scale=2), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
 
