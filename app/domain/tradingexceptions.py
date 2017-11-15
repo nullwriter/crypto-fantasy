@@ -45,7 +45,7 @@ class NotEnoughMoneyError(Error):
 
 class NotEnoughCryptoCoinError(Error):
     def __int__(self):
-        self.msg = "Not enough crypto coin in your portfolio for current transaction"
+        self.msg = "Not enough crypto coins or usd in your portfolio for current transaction"
 
 
 class NoCurrentPlayersInRound(Error):
@@ -55,7 +55,7 @@ class NoCurrentPlayersInRound(Error):
 
 class YouAreAlreadyRegisteredError(Error):
     def __init__(self):
-        self.msg = "You are already registered :)"
+        self.msg = "You are already registered :). Write *join* or *play* to enter the current round."
 
 
 class NoPlayersInCurrentGameRoundError(Error):

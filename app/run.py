@@ -50,6 +50,5 @@ if __name__ == '__main__':
             print(traceback.format_exc())
             print("Exception occurred at core level..."+str(e))
 
-        print(traceback.format_exc())
         print("Will try to reboot in 10s")
         time.sleep(10)
