@@ -3,8 +3,8 @@
 *.sqlite3
 .idea/
 .DS_Store
-app/dist
-app/build
+app/dist/
+app/build/
 app/credentials.txt
-app/Whatsapp_Crypto_Fantasy_Bot.egg-info
-app/example
+app/Whatsapp_Crypto_Fantasy_Bot.egg-info/
+app/example/
