@@ -65,8 +65,6 @@ if __name__ == '__main__':
         print('Exception: '+str(e))
         exit(1)
 
-    exit(1)
-
     st = datetime.datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S')
     print(">>>>>> Starting at %s" % st)
 
