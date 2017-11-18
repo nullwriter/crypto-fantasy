@@ -2,7 +2,7 @@ from controller import BOT_ORM_SESSION, BOT_ENGINE
 from domain.tabledef import *
 from service.getcryptocoin import GetCryptoCoin
 import pandas as pd
-from datetime import datetime, date, time, timedelta
+from datetime import datetime, timedelta
 
 
 class DatabaseOrm:
@@ -22,7 +22,6 @@ class DatabaseOrm:
         Tables with necessary initial data are:
             1. CryptoStock
             2. GameRound
-            3. Person
         """
         if self.session.query(CryptoStock).first() is None:
             print(">>>> Adding crypto coins to database")
@@ -31,10 +30,6 @@ class DatabaseOrm:
         if self.session.query(GameRound).first() is None:
             print(">>>> Adding game rounds to database")
             self.add_game_rounds()
-
-        if self.session.query(Person).first() is None:
-            print(">>>> Adding test person to database")
-            self.add_test_user()
 
     def add_game_rounds(self, days_length=7):
 
@@ -62,20 +57,10 @@ class DatabaseOrm:
 
         self.session.commit()
 
-    def add_test_user(self):
-        person = Person(
-            name="Christian Feo",
-            phone_number="584142534221",
-            authorized=True
-        )
-
-        self.session.add(person)
-        self.session.commit()
-
     def add_crypto_coins_data(self):
         gcc = GetCryptoCoin()
 
-        coins = gcc.get_all_coins(limit=100)
+        coins = gcc.get_all_coins(limit=400)
         for coin in coins:
             crypto_stock = CryptoStock(
                 name=coin['name'],

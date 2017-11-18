@@ -10,8 +10,6 @@ from yowsup.layers.axolotl.props import PROP_IDENTITY_AUTOTRUST
 import time
 import datetime
 
-CREDENTIALS = ("584242718060", "W/faTNMvMFCboAGSr2/xsQEPSfg=")
-
 
 class YowsupEchoStack(object):
     def __init__(self, credentials, encryptionEnabled = True):
@@ -32,8 +30,42 @@ class YowsupEchoStack(object):
         except AuthError as e:
             print("Authentication Error: %s" % e)
 
+
+def get_credentials():
+
+    credentials_file = 'credentials.txt'
+
+    try:
+        with open(credentials_file, 'r') as f:
+            data = f.read().replace('\n', '')
+    except (IOError, OSError):
+        print('Credentials file %s was not found. Creating %s... Please modify with login details and re-run the bot.'
+              % (credentials_file, credentials_file))
+        with open(credentials_file, 'w') as f:
+            f.write('phone_number:password')
+        exit(1)
+
+    parts = data.split(':')
+    login = (parts[0], parts[1])
+
+    if parts[0] == 'phone_number' or parts[1] == 'password':
+        raise ValueError('Default crendentials.txt detected. Please modify with login details.')
+
+    return login
+
 if __name__ == '__main__':
     db().initialize()
+
+    try:
+        credentials = get_credentials()
+    except IndexError as e:
+        print('Exception: Incorrect format in credentials file.')
+        exit(1)
+    except Exception as e:
+        print('Exception: '+str(e))
+        exit(1)
+
+    exit(1)
 
     st = datetime.datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S')
     print(">>>>>> Starting at %s" % st)
@@ -42,7 +74,7 @@ if __name__ == '__main__':
 
         print(">>>>>> Loop start")
         try:
-            YowsupEchoStack(CREDENTIALS).start()
+            YowsupEchoStack(credentials).start()
         except AttributeError as e:
             print("Attr error: "+str(e))
             print(traceback.format_exc())
