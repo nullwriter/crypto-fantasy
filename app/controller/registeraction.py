@@ -9,6 +9,9 @@ class RegisterAction:
         self.phone_number = phone
         self.name = name
 
+        if name is None:
+            raise ValueError("You must provide a name to register. e.g. register Barack Obama")
+
     def persist(self):
 
         """

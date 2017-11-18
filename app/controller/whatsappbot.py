@@ -112,6 +112,8 @@ class WhatsappBot:
         try:
             register_action = RegisterAction(phone=phone, name=arg)
             return register_action.persist()
+        except ValueError as e:
+            return str(e)
         except YouAreAlreadyRegisteredError as e:
             return e.msg
 
