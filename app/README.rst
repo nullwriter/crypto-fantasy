@@ -19,7 +19,7 @@ Its a great way to practice trading, as well as keeping up with prices and trend
 
  * help
  * tutorial
- * tick / ticker / $<symbol\>: returns information about the coin; price, % change, etc.
+ * tick / ticker <symbol\>: returns information about the coin; price, % change, etc.
  * top <number\>: returns a list of top cryptocurrencies with prices and % change
  * buy <amount_usd> <symbol\>
  * sell $<amount_usd> <symbol\> or sell <coin_amount> <symbol\>
@@ -62,7 +62,7 @@ python setup.py install
 
 * Requires mobile phone number from SIM card
 
-First you need to [follow Yowsup's registration process](https://github.com/tgalal/yowsup/wiki/yowsup-cli-2.0#yowsup-cli-registration) to register your phone number and obtain the Whatsapp password
+First you need to [follow Yowsup's registration process](https://github.com/tgalal/yowsup/wiki/yowsup-cli-2.0#yowsup-cli-registration) to register your phone number and obtain the Whatsapp password.
 
 Copy and rename ```credentials.txt.example``` to ```credentials.txt``` and add your login details (phone number and password provided by previous step).
 
@@ -85,6 +85,6 @@ python3 run.py
 This will create the sqlite3 database and start the game loop. From this point, you should be able to talk to the bot. Start by sending ```help``` through whatsapp to check the commands available.
 
 
-## License:
+## License
 
 crypto-fantasy is licensed under the GPLv3+: http://www.gnu.org/licenses/gpl-3.0.html.
