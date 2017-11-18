@@ -5,3 +5,4 @@
 .DS_Store
 .app/dist/
 .app/build/
+.app/credentials.txt
