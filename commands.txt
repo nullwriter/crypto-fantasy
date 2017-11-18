@@ -1,12 +1,6 @@
-./yowsup-cli registration --requestcode sms --phone 584142534221 --cc 58 --mcc 734 --mnc 04 -E android
+./yowsup-cli registration --requestcode sms --phone phone_number --cc 58 --mcc 734 --mnc 04 -E android
 
-./yowsup-cli registration --register 764117 --phone 584142534221 --cc 58 -E android
-
-
-user 584241284028
-pass NzTpLXj0b516w8Eqm5zh+FP5PC8=
-
-
+./yowsup-cli registration --register whatsapp_code --phone phone_number --cc 58 -E android
 
 Coin api result:
 
