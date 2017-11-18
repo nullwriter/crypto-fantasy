@@ -16,7 +16,7 @@ from domain.tradingexceptions import NoCrytoCurrencyFoundError, PlayerIsAlreadyI
     YouAreAlreadyRegisteredError, NoPersonWasFoundError, NoStocksInPortfolioError
 from service.gettransactions import GetTransactions
 
-ADMIN_USER = "59414253421"
+ADMIN_USER = ""
 
 
 class WhatsappBot:
