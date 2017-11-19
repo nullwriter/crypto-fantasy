@@ -26,7 +26,7 @@ Its a great way to practice trading, as well as keeping up with prices and trend
  * leaderboard
  * join \ play: joins the current round. Must be registered before.
  * portfolio
- * register <name>
+ * register <name\>
  * transactions (WIP)
 
 ## Installation
