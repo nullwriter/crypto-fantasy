@@ -30,6 +30,8 @@ class GetGameRound:
         with session_scope() as session:
             prev_game = session.query(GameRound).filter_by(id=prev_id).first()
 
+        print("previous game = "+str(prev_game))
+
         return prev_game
 
     def is_player_in_round(self, game_round, player):
