@@ -60,8 +60,8 @@ class PersistBuy:
 
         if previous_bought_crypto:
             for pbc in previous_bought_crypto:
-                coin_amount += pbc.coin_amount
-                fiat_amount += pbc.fiat_amount
+                coin_amount += float(pbc.coin_amount)
+                fiat_amount += float(pbc.fiat_amount)
 
             new_buy_price = float(fiat_amount) / float(coin_amount)
 
