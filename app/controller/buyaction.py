@@ -16,7 +16,6 @@ class BuyAction(TradeTransaction):
 
         self.price = get_crypto_api.get_coin_price(symbol=symbol, numeric=True)
         self.symbol = self.clean_arg(symbol.upper())
-        self.fiat_amount = self.clean_arg(fiat_amount)
         self.player = GetPerson(number=player).get()
         self.coin_amount = self.get_coin_amount()
         self.coin = get_crypto_api.get_coin(symbol=self.symbol)

@@ -25,7 +25,6 @@ class PersistBuy:
         If Crypto doesn't exist, lets add it to our collection while we're at it
         """
         if crypto_stock is None:
-            print("Crypto stock asked to buy does not exist")
             crypto_stock = CryptoStock(
                 name=action.coin['name'],
                 symbol=action.coin['symbol'],
@@ -43,6 +42,29 @@ class PersistBuy:
             portfolio_id=portfolio.id
         )
 
+        with session_scope() as session:
+            session.add(bought_crypto)
+
+        """
+        Lets calculate new buy price based on current & previous buys
+        """
+        with session_scope() as session:
+            previous_bought_crypto = session.query(BoughtCryptoStock).filter_by(
+                crypto_stock_id=crypto_stock.id,
+                portfolio_id=portfolio.id
+            ).all()
+
+        coin_amount = float(action.coin_amount)
+        fiat_amount = float(action.fiat_amount)
+        new_buy_price = float(action.price)
+
+        if previous_bought_crypto:
+            for pbc in previous_bought_crypto:
+                coin_amount += pbc.coin_amount
+                fiat_amount += pbc.fiat_amount
+
+            new_buy_price = float(fiat_amount) / float(coin_amount)
+
         """
         Lets add to accumulated PortfolioStock table
         """
@@ -57,18 +79,18 @@ class PersistBuy:
             portfolio_stock = PortfolioStock(
                 portfolio_id=portfolio.id,
                 crypto_stock_id=crypto_stock.id,
-                coin_amount=action.coin_amount
+                coin_amount=coin_amount,
+                buy_price=new_buy_price
             )
         else:
             """Lets increment amount"""
-            current_amount = portfolio_stock.coin_amount
-            portfolio_stock.coin_amount = float(current_amount) + action.coin_amount
+            portfolio_stock.coin_amount = coin_amount
+            portfolio_stock.buy_price = new_buy_price
 
         portfolio.fiat_amount = fiat_left
 
         with session_scope() as session:
             session.add(portfolio_stock)
             session.add(portfolio)
-            session.add(bought_crypto)
 
         return True

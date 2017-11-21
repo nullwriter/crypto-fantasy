@@ -58,6 +58,7 @@ class PortfolioStock(Base):
     id = Column(Integer, primary_key=True)
     portfolio_id = Column(Integer, ForeignKey('portfolio.id'))
     crypto_stock_id = Column(Integer, ForeignKey('crypto_stock.id'), nullable=False)
+    buy_price = Column(Float(8, asdecimal=True, decimal_return_scale=8), nullable=False)
     coin_amount = Column(Float(8, asdecimal=True, decimal_return_scale=8), nullable=False)
 
 

@@ -47,7 +47,7 @@ class PersistSell:
             with session_scope() as session:
                 session.add(portfolio_stock)
 
-        elif coin_left == 0:
+        elif coin_left <= 0:
             """
             If no coin left, remove from bought coins and from portfolio stocks
             """
