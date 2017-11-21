@@ -5,7 +5,7 @@ import time
 import datetime
 import traceback
 
-FAKE_NUMBER = "584142534221"
+FAKE_NUMBER = ""
 
 
 class CmdFakeLayer:

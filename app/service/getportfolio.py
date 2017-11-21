@@ -89,14 +89,19 @@ class GetPortfolio:
             except NoCrytoCurrencyFoundError:
                 current_price = 0
 
-            current_price_str = "$%.2f" % current_price
+            current_value = "$%.2f" % current_price
+            initial_value = float(stock.buy_price) * float(stock.coin_amount)
 
-            at_price = float(current_price) / float(stock.coin_amount)
-            at_price_str = "$%.2f" % at_price
+            nice_string = crypto.symbol + " " + str(stock.coin_amount)+" - "+current_value
 
-            nice_string = crypto.symbol + " " + str(stock.coin_amount)+" - "+current_price_str
+            value_change = self.get_price_change(current_price, initial_value)
+            if initial_value != 0:
+                """
+                This check is added since this functionality is new and the data is not in all players at the moment.
+                """
+                nice_string += " ("+value_change+")"
+
             current_crypto_value += current_price
-
             portfolio_string += nice_string+"\n"
 
         total_value = current_crypto_value + float(portfolio.fiat_amount)
@@ -108,4 +113,13 @@ class GetPortfolio:
 
         return portfolio_string
 
+    @staticmethod
+    def get_price_change(current_price, initial_value):
 
+        indicator = "+"
+        value_change = abs(float(current_price) - float(initial_value))
+
+        if current_price < initial_value:
+            indicator = "-"
+
+        return indicator + "$%.2f" % value_change

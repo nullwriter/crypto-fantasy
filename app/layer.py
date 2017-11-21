@@ -46,8 +46,6 @@ class EchoLayer(YowInterfaceLayer):
             messageProtocolEntity.getFrom(False)
         ))
 
-        #if messageProtocolEntity.getFrom(False) == "584142534221":
-
         message = messageProtocolEntity.getBody()
         message_to_send = self.mcall.resolve(
             message,
@@ -78,31 +76,3 @@ class EchoLayer(YowInterfaceLayer):
 
         elif messageProtocolEntity.getMediaType() == "vcard":
             print("Echoing vcard (%s, %s) to %s" % (messageProtocolEntity.getName(), messageProtocolEntity.getCardData(), messageProtocolEntity.getFrom(False)))
-
-# @ProtocolEntityCallback("success")
-# def onSuccess(self, successProtocolEntity):
-#     self.lock.acquire()
-#     for target in self.getProp(self.__class__.PROP_MESSAGES, []):
-#         phone, message = target
-#         if '@' in phone:
-#             messageEntity = TextMessageProtocolEntity(message, to = phone)
-#         elif '-' in phone:
-#             messageEntity = TextMessageProtocolEntity(message, to = "%s@g.us" % phone)
-#         else:
-#             messageEntity = TextMessageProtocolEntity(message, to = "%s@s.whatsapp.net" % phone)
-#         print(phone)
-#         self.ackQueue.append(messageEntity.getId())
-#         self.toLower(messageEntity)
-#     self.lock.release()
-#
-# @ProtocolEntityCallback("ack")
-# def onAck(self, entity):
-#     self.lock.acquire()
-#     if entity.getId() in self.ackQueue:
-#         self.ackQueue.pop(self.ackQueue.index(entity.getId()))
-#
-#     if not len(self.ackQueue):
-#         self.lock.release()
-#         raise KeyboardInterrupt()
-#
-#     self.lock.release()
