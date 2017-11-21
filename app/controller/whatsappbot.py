@@ -146,6 +146,68 @@ class WhatsappBot:
     def do_say(self, arg, phone=""):
         return arg
 
+    def do_hotfix(self, arg, phone=""):
+        from service.contextmanager import session_scope
+        from domain.tabledef import Person
+        from domain.tabledef import BoughtCryptoStock
+        from domain.tabledef import PortfolioStock
+        from domain.tabledef import CryptoStock
+
+        with session_scope() as session:
+            players = session.query(Person).all()
+
+        for player in players:
+            print("doing hotfix")
+            try:
+                portfolio = GetPortfolio(player).get()
+            except (PlayerIsNotPartOfGameRoundError, Exception):
+                continue
+
+            print("++++doing player "+player.name)
+
+            with session_scope() as session:
+                bought_cryptos = session.query(BoughtCryptoStock).filter_by(portfolio_id=portfolio.id).all()
+
+            bc_saved = []
+
+            for bc in bought_cryptos:
+                """
+                Delete all bought cryptos and save info on array
+                """
+                bc_saved.append({'price': bc.at_price, 'crypto_id': bc.crypto_stock_id})
+                session.delete(bc)
+
+            with session_scope() as session:
+                portfolio_stocks = session.query(PortfolioStock).filter_by(portfolio_id=portfolio.id)
+
+            """
+            Add all portfolio_stocks into bought cryptos
+            """
+            if portfolio_stocks:
+                for stock in portfolio_stocks:
+
+                    at_price = 0
+                    for bc in bc_saved:
+                        if bc['crypto_id'] == stock.crypto_stock_id:
+                            at_price = bc['price']
+                            break
+
+                    if at_price == 0:
+                        with session_scope() as session:
+                            crypto_stock = session.query(CryptoStock).filter_by(id=stock.crypto_stock_id).first()
+                        at_price = GetCryptoCoin().get_coin_price(symbol=crypto_stock.symbol, numeric=True)
+
+                    fiat_amount = float(stock.coin_amount) * float(at_price)
+                    bought_crypto = BoughtCryptoStock(
+                        crypto_stock_id=stock.crypto_stock_id,
+                        at_price=at_price,
+                        coin_amount=stock.coin_amount,
+                        fiat_amount=fiat_amount,
+                        portfolio_id=portfolio.id
+                    )
+                    with session_scope() as session:
+                        session.add(bought_crypto)
+
 
 class MethodCallInterface:
 
@@ -172,7 +234,8 @@ class MethodCallInterface:
             'tutorial': wb.do_tutorial,
             'transactions': wb.do_transactions,
             'botty': wb.do_hello,
-            'hi': wb.do_hello
+            'hi': wb.do_hello,
+            'hotfix': wb.do_hotfix
         }
 
     def resolve(self, message, from_number, participant):

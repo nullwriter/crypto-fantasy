@@ -34,6 +34,8 @@ class PersistBuy:
             with session_scope() as session:
                 session.add(crypto_stock)
 
+        print("bought at price = "+str(action.price))
+
         bought_crypto = BoughtCryptoStock(
             crypto_stock_id=crypto_stock.id,
             at_price=action.price,
@@ -55,15 +57,22 @@ class PersistBuy:
             ).all()
 
         coin_amount = float(action.coin_amount)
-        fiat_amount = float(action.fiat_amount)
         new_buy_price = float(action.price)
 
         if previous_bought_crypto:
+            coin_amount = 0
+            fiat_amount = 0
+            new_buy_price = 0
+
+            print("got previous crypto buys")
+
             for pbc in previous_bought_crypto:
                 coin_amount += float(pbc.coin_amount)
                 fiat_amount += float(pbc.fiat_amount)
+                print("for each crypto buy. coin = "+str(coin_amount)+", fiat = "+str(fiat_amount))
 
             new_buy_price = float(fiat_amount) / float(coin_amount)
+            print("new buy price = "+str(new_buy_price))
 
         """
         Lets add to accumulated PortfolioStock table
@@ -75,6 +84,7 @@ class PersistBuy:
             ).first()
 
         if portfolio_stock is None:
+            print("portfolio stock is none")
             """Lets add it"""
             portfolio_stock = PortfolioStock(
                 portfolio_id=portfolio.id,
@@ -83,6 +93,7 @@ class PersistBuy:
                 buy_price=new_buy_price
             )
         else:
+            print("found portfolio stock")
             """Lets increment amount"""
             portfolio_stock.coin_amount = coin_amount
             portfolio_stock.buy_price = new_buy_price
