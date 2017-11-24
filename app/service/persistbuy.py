@@ -57,7 +57,8 @@ class PersistBuy:
             portfolio_stock = PortfolioStock(
                 portfolio_id=portfolio.id,
                 crypto_stock_id=crypto_stock.id,
-                coin_amount=action.coin_amount
+                coin_amount=action.coin_amount,
+                buy_price=action.price
             )
         else:
             """Lets increment amount"""

@@ -60,7 +60,7 @@ class WhatsappBot:
             portfolio = GetPortfolio(person).get()
             portfolio_string = GetPortfolio(person).print(portfolio)
             return portfolio_string
-        except PlayerIsNotPartOfGameRoundError as e:
+        except (PlayerIsNotPartOfGameRoundError, NoPersonWasFoundError) as e:
             return e.msg
 
     def do_leaderboard(self, arg, phone=""):
