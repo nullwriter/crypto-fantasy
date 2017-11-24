@@ -47,13 +47,16 @@ class PersistSell:
             with session_scope() as session:
                 session.add(portfolio_stock)
 
-        elif coin_left == 0:
+        elif coin_left <= 0:
             """
             If no coin left, remove from bought coins and from portfolio stocks
             """
             with session_scope() as session:
                 session.delete(portfolio_stock)
-                bought_crypto = session.query(BoughtCryptoStock).filter_by(crypto_stock_id=crypto_stock.id).all()
+                bought_crypto = session.query(BoughtCryptoStock).filter_by(
+                    crypto_stock_id=crypto_stock.id,
+                    portfolio_id=portfolio.id
+                ).all()
 
             for crypto in bought_crypto:
                 with session_scope() as session:
