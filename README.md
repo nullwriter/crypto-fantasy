@@ -77,9 +77,14 @@ Then:
 cd app
 ```
 
-And run:
+And type this to run on Whatsapp:
 ```
 python3 run.py
+```
+
+Or this to run in command line for tests:
+```
+python3 run-cli.py
 ```
 
 This will create the sqlite3 database and start the game loop. From this point, you should be able to talk to the bot. Start by sending ```help``` through whatsapp to check the commands available.
