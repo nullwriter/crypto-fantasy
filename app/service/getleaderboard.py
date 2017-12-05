@@ -1,7 +1,7 @@
 from sqlalchemy import desc
 
 from service.getportfolio import GetPortfolio
-from domain.tradingexceptions import NoStocksInPortfolioError
+from domain.tradingexceptions import NoStocksInPortfolioError, PlayerIsNotPartOfGameRoundError
 from domain.tabledef import Leaderboard
 from service.getgameround import GetGameRound
 from service.getperson import GetPerson
@@ -28,7 +28,11 @@ class GetLeaderBoard:
         for player in game_round_players:
 
             person = GetPerson().get_by_id(player.person_id)
-            portfolio = get_portfolio.get_by_game_round_player(player)
+
+            try:
+                portfolio = get_portfolio.get_by_game_round_player(player)
+            except PlayerIsNotPartOfGameRoundError:
+                continue
 
             try:
                 crypto_value = get_portfolio.get_crypto_value(portfolio)
