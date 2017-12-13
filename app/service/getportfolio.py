@@ -54,11 +54,14 @@ class GetPortfolio:
             with session_scope() as session:
                 crypto = session.query(CryptoStock).filter_by(id=stock.crypto_stock_id).first()
 
-            current_price = get_coin.get_coin_price(
-                symbol=crypto.symbol,
-                numeric=True,
-                amount=stock.coin_amount
-            )
+            try:
+                current_price = get_coin.get_coin_price(
+                    symbol=crypto.symbol,
+                    numeric=True,
+                    amount=stock.coin_amount
+                )
+            except NoCrytoCurrencyFoundError:
+                continue
 
             current_crypto_value += current_price
 
