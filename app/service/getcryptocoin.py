@@ -1,7 +1,7 @@
 from coinmarketcap import Market
 from domain.tradingexceptions import NoCrytoCurrencyFoundError
 
-RESULT_LIMIT = 700
+RESULT_LIMIT = 1000
 
 
 class GetCryptoCoin:
