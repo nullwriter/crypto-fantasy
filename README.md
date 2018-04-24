@@ -1,3 +1,8 @@
+## April 2018 Update
+It has been detected by many Yowsup users that Whatsapp is insta-banning anyone trying to register a phone number using the library. Please refrain from doing so and save your phone number :). 
+
+Some members have suggested that registering the number in an actual phone, using it a bit, and after 12 hours using it with Yowsup has been a successfull way to bypass Whatsapp's bot filter.
+
 ## Crypto-Fantasy
 
 Donate to contribute with the project:
